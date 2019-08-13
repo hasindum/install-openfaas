@@ -2,7 +2,6 @@
 - ec2_metadata_facts:
   when: region != "local"
 
----
 - ec2_metadata_facts:
   when: region != "local"
 
