@@ -1,0 +1,44 @@
+---
+- ec2_metadata_facts:
+  when: region != "local"
+
+---
+- ec2_metadata_facts:
+  when: region != "local"
+
+- block:
+  - name: get ec2 tags
+    ec2_tag:
+      region: "{{ region }}"
+      resource: "{{ ansible_ec2_instance_id }}"
+      state: list
+    register: ec2_tags
+
+  - ec2_asg_facts:
+      name: "{{ asg_name_data }}"
+    register: data_asg
+
+  - ec2_instance_facts:
+      instance_ids: "{{data_asg.results[0]|json_query('instances[*].instance_id')}}"
+    register: data_asg_instances
+
+  - set_fact:
+      cluster_ips: "{{data_asg_instances|json_query('instances[*].private_ip_address')}}"
+      
+  - set_fact:
+      rally_instances: "{{ data_asg_instances.instances | selectattr('private_ip_address', 'defined') | list | sort(attribute='launch_time') }}"
+      group_name: "{{ ansible_ec2_placement_availability_zone }}"
+
+  when: region != "local"
+
+- set_fact:
+    cluster_ips:
+      - 10.0.0.1
+        10.0.0.2
+        10.0.0.3
+  when: region == "local"
+
+- set_fact:
+    rally_instances:
+      - { "private_ip_address": "{{ansible_ec2_local_ipv4}}" }
+  when: region == "local"      
