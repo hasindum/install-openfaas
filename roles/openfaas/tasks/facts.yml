@@ -1,9 +1,9 @@
 ---
 - ec2_metadata_facts:
-  when: region != "local"
+  when: region != "localhost"
 
 - ec2_metadata_facts:
-  when: region != "local"
+  when: region != "localhost"
 
 - block:
   - name: get ec2 tags
@@ -28,14 +28,14 @@
       rally_instances: "{{ data_asg_instances.instances | selectattr('private_ip_address', 'defined') | list | sort(attribute='launch_time') }}"
       group_name: "{{ ansible_ec2_placement_availability_zone }}"
 
-  when: region != "local"
+  when: region != "localhost"
 
 - set_fact:
     cluster_ips:
       - 10.0.0.1
         10.0.0.2
         10.0.0.3
-  when: region == "local"
+  when: region == "localhost"
 
 - set_fact:
     rally_instances:
