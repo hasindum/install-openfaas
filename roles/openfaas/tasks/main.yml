@@ -20,3 +20,9 @@
   when: is_rally_point is defined and is_rally_point == true
   tags:
     - install
+
+- name: Create or update key/value pair in aws parameter store
+  aws_ssm_parameter_store:
+    name: "Hello"
+    description: "This is your first key"
+    value: "World"
