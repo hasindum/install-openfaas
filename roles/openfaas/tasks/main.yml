@@ -1,3 +1,22 @@
 ---
   
 - include_tasks: facts.yml
+
+
+- name: set asg first node as the rally point server
+  set_fact:
+    rally_point_server: "{{ rally_instances[0].private_ip_address }}"
+  tags:
+    - install
+
+- name: initiate is_rally_point bool
+  set_fact:
+    is_rally_point: "{{ rally_point_server == ansible_ec2_local_ipv4 }}"
+  tags:
+    - install
+
+- name: init swam
+  shell: docker swarm init
+  when: is_rally_point is defined and is_rally_point == true
+  tags:
+    - install
