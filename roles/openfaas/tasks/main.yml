@@ -28,6 +28,10 @@
   tags:
     - install
 
+- name: sleep for 60 seconds
+  wait_for:
+    timeout: 60
+
 - name: Create key/value pair in aws parameter store
   aws_ssm_parameter_store:
     name: "swarm_token"
