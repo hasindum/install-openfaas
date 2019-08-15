@@ -42,7 +42,7 @@
   when: is_rally_point is defined and is_rally_point == false
 
 - name: join as a manager
-  shell: docker swarm join --token {{ssm_token}} {{ansible_ec2_local_ipv4}}:2377 
+  shell: docker swarm join --token {{ssm_token}} {{rally_point_server}}:2377 
   when: is_rally_point is defined and is_rally_point == false
   retries: 3
   delay: 20
