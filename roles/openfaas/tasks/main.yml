@@ -28,6 +28,12 @@
   tags:
     - install
 
+- name: install openfass
+  shell: git clone https://github.com/openfaas/faas && cd faas && ./deploy_stack.sh --no-auth
+  when: is_rally_point is defined and is_rally_point == true
+  tags:
+    - install    
+
 - name: sleep for 60 seconds
   wait_for:
     timeout: 60
@@ -37,7 +43,7 @@
     name: "swarm_token"
     description: "Swarm token"
     value: "{{swarm_token.stdout}}"
-  when: is_rally_point is defined and is_rally_point == true  
+  when: is_rally_point is defined and is_rally_point == true
 
 - name: lookup a swam-tokent in ssm
   set_fact:
