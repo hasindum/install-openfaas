@@ -28,16 +28,6 @@
   tags:
     - install
  
-- name: sleep for 60 seconds
-  wait_for:
-    timeout: 60
-  when: is_rally_point is defined and is_rally_point == false
-
-- name: sleep for 120 seconds
-  wait_for:
-    timeout: 30
-  when: is_rally_point is defined and is_rally_point == true   
-
 - name: Create key/value pair in aws parameter store
   aws_ssm_parameter_store:
     name: "swarm_token"
@@ -58,7 +48,17 @@
   delay: 20
   tags:
     - install
-    
+
+# - name: sleep for 60 seconds
+#   wait_for:
+#     timeout: 60
+#   when: is_rally_point is defined and is_rally_point == false
+
+- name: sleep for 60 seconds
+  wait_for:
+    timeout: 60
+  when: is_rally_point is defined and is_rally_point == true   
+
 - name: install openfass
   shell: git clone https://github.com/openfaas/faas && cd faas && ./deploy_stack.sh --no-auth
   when: is_rally_point is defined and is_rally_point == true
