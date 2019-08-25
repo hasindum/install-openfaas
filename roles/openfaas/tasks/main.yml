@@ -35,21 +35,9 @@
 
 - name: sleep for 120 seconds
   wait_for:
-    timeout: 120
+    timeout: 30
   when: is_rally_point is defined and is_rally_point == true   
 
-- name: install openfass
-  shell: git clone https://github.com/openfaas/faas && cd faas && ./deploy_stack.sh --no-auth
-  when: is_rally_point is defined and is_rally_point == true
-  tags:
-    - install   
-
-- name: install grafana dashboard
-  shell: docker service create -d --name=func_grafana --publish=3000:3000 --network=func_functions stefanprodan/faas-grafana:4.6.3
-  when: is_rally_point is defined and is_rally_point == true
-  tags:
-    - install   
-    
 - name: Create key/value pair in aws parameter store
   aws_ssm_parameter_store:
     name: "swarm_token"
@@ -70,8 +58,19 @@
   delay: 20
   tags:
     - install
+    
+- name: install openfass
+  shell: git clone https://github.com/openfaas/faas && cd faas && ./deploy_stack.sh --no-auth
+  when: is_rally_point is defined and is_rally_point == true
+  tags:
+    - install   
 
-
+- name: install grafana dashboard
+  shell: docker service create -d --name=func_grafana --publish=3000:3000 --network=func_functions stefanprodan/faas-grafana:4.6.3
+  when: is_rally_point is defined and is_rally_point == true
+  tags:
+    - install   
+    
 # - name: lookup ssm parameter store in the current region
 #   debug: msg="{{temp_secret}}"
 #   changed_when: true   
